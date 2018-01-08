@@ -3,7 +3,7 @@
 sudo pacman -S $1
 
 
-for errore in stdout
+for error in stdout
 
 do
         echo '.......................................'
