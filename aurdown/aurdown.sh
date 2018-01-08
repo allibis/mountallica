@@ -1,12 +1,10 @@
 #!/bin/bash
 
-cd ~/Scaricati/
+cd ~/
 
-echo 'write the package names:' && read pkg
-
-wget https://aur.archlinux.org/cgit/aur.git/snapshot/$pkg.tar.gz
-tar -xf $pkg.tar.gz
-cd $pkg/
-makepkg -sic --noconfirm
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz
+tar -xf $1.tar.gz
+cd $1/
+makepkg -sic
 
 
