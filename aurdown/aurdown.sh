@@ -12,7 +12,6 @@ if (sudo pacman -Sp $1 |& grep errore); then
         tar -xf $1.tar.gz
         makepkg -sic
         echo    
-        exit
 else
         sudo pacman -S $1
 fi
