@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if (sudo pacman -Sp $1 |& grep errore); then
-        echo '-----------------------------------------'
-        echo '==> package not found in the official repos'
-        echo '==> searching it in the AUR'
-        echo '-----------------------------------------'
+        echo '+-------------------------------------------------+'
+        echo '|==> package not found in the official repos.       |'
+        echo '|==> searching it in the AUR.                     |'
+        echo '+-------------------------------------------------+'
         cd $HOME
         mkdir $1
         cd $HOME/$1
