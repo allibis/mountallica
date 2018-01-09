@@ -11,11 +11,12 @@ if (sudo pacman -Sp $1 |& grep errore); then
         wget https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz
         tar -xf $1.tar.gz
         makepkg -sic
-        echo    
+        echo
+        echo 'installation complete'
 else
         sudo pacman -S $1
+        echo 'installation complete'
 fi
-echo 'installation complete'
 exit
      
 
