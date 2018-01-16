@@ -104,7 +104,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	do
 		read bios
 		if [[ $bootpart == true ]]; then
-			if [[ /sys/efi/efivars -d]]; then
+			if [ -d /sys/efi/efivars ]; then
 				chattr -i /boot/grub/i386-pc/core.img
 				grub-install --target=i386-pc --recheck --debug --force /dev/sdaX
 				chattr +i /boot/grub/i386-pc/core.img
