@@ -19,6 +19,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo vanno bene le partizioni?
 		read ans
 	done
+	fdisk -l
+	echo
 	echo scegli la partizione di root
 	read root
 	if ! mkfs.ext4 /dev/$root >&/dev/null; then mkfs.ext4 $root >&/dev/null; fi
