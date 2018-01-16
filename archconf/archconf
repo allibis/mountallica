@@ -227,7 +227,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			pacman -S $pkgs
 			echo finito?
 			read ans
-			if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]]; then
+			if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		done
