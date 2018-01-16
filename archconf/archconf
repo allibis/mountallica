@@ -113,7 +113,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		else
-			if [[ /sys/efi/efivars -d]]; then
+			if [ -d /sys/efi/efivars ]; then
 				chattr -i /boot/grub/i386-pc/core.img
 				grub-install --target=i386-pc --recheck --debug --force /dev/sda
 				chattr +i /boot/grub/i386-pc/core.img
@@ -131,7 +131,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo LANG=it_IT.UTF-8 > /etc/locale.conf
 	echo 'KEYMAP=it' > /etc/vconsole.conf
 	ln -s /usr/share/zoneinfo/Europe/Rome /etc/localtime
-	echo 127.0.1.1'        '$hostname.localdomain'        '$hostname
+	echo "127.0.1.1        $hostname.localdomain        $hostname"
 	if [[ $typeinterface == wifi ]] ; then 
 		wifi-menu
 	else 
