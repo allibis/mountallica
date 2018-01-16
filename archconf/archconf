@@ -22,7 +22,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo scegli la partizione di root
 	read root
 	if ! mkfs.ext4 /dev/$root >&/dev/null; then mkfs.ext4 $root >&/dev/null; fi
-	if ! mount /dev/$root / >&/dev/null; then mount $root >&/dev/null; fi
+	if ! mount /dev/$root /mnt >&/dev/null; then mount $root /mnt >&/dev/null; fi
 	echo vuoi installare /home in una partizione separata?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
@@ -120,6 +120,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			else
 				grub-install --target=i386-pc --recheck --debug /dev/sda
 				ctrl=1
+			fi
 		fi
 	done
 	grub-mkconfig -o /boot/grub/grub.cfg
@@ -159,8 +160,10 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ]
 	do
 		read shell
-		if ! pacman -S $shell >&/dev/null ; then echo 'inserisci una bash valida'
-		else ; ctrl=1 
+		if ! pacman -S $shell >&/dev/null; then 
+			echo 'inserisci una bash valida'
+		else
+			ctrl=1 
 		fi
 	done
 	echo inserisci il nome utente 
@@ -186,13 +189,13 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	${editor} /etc/sudoers
 	echo vuoi installare un DE?
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]] ; then
+	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 		echo quale?
 		ctrl=0
 		while [ $ctrl == 0 ]
 		do
 			read de
-			if ! pacman -S $de >&/dev/null ; then
+			if ! pacman -S $de >&/dev/null; then
 				echo inserisci un DE valido
 			else
 				ctrl=1
@@ -204,7 +207,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ]
 	do
 		read dm
-		if ! pacman -S $dm ; then
+		if ! pacman -S $dm; then
 			echo 'inserisci un DM valido'
 		else
 			systemctl enable $dm
@@ -213,7 +216,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	echo vuoi installare altre cose?
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]] ; then
+	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 		ctrl=0
 		while [ $ctrl == 0 ]
 		do
@@ -222,7 +225,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			pacman -S $pkgs
 			echo finito?
 			read ans
-			if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]] ; then
+			if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		done
@@ -230,7 +233,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	exit
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] [[ $ans == '' ]] ; then
+	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 		poweroff
 	fi
 else
