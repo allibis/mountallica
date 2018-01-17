@@ -3,7 +3,7 @@
 if ! pacman -Si $1 >&/dev/null; then
         cd $HOME                
         echo '+-------------------------------------------+'
-        echo '|==> package not found in the official repos|'
+        echo '|==> package not found in the official repos  |'
         echo '|==> searching it in the AUR                |'
         echo '+-------------------------------------------+'
         mkdir $1
