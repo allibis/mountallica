@@ -96,8 +96,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
-	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown && cp aurdown.sh /mnt/bin/aurdown
+	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh && cp aurdown.sh /mnt/bin/aurdown
 	cmdchroot () {
+	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
 	passwd 
 	if [ -d /sys/efi/efivars ]; then
@@ -138,7 +139,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		else 
 			echo 'inserisci un driver valido'
 		fi
-	done	
+	done
+	pacman -Scc --noconfirm >&/dev/null
 	sudo pacman -S mesa
 	echo che shell vuoi usare?
 	ctrl=0
@@ -167,7 +169,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo 'inserisci un editor valido'
 		fi
 	done
-
+	pacman -Scc --noconfirm >&/dev/null
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
 	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell\'user
 	echo decommenta la riga "%wheel ALL=(ALL) NOPASSWD: ALL" per usare sudo senza password
@@ -187,6 +189,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			fi
 		done
 	fi
+	pacman -Scc --noconfirm >&/dev/null
 	echo che DM vuoi installare?
 	ctrl=0
 	while [ $ctrl == 0 ]
@@ -199,6 +202,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			ctrl=1
 		fi
 	done
+	pacman -Scc --noconfirm >&/dev/null
 	echo vuoi installare altre cose?
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
