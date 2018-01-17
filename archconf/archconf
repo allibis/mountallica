@@ -116,8 +116,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	locale-gen
 	echo LANG=it_IT.UTF-8 > /etc/locale.conf
 	echo 'KEYMAP=it' > /etc/vconsole.conf
-	ln -s /usr/share/zoneinfo/Europe/Rome /etc/localtime
-	echo "127.0.1.1        $hostname.localdomain        $hostname"
+	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
+	echo "127.0.1.1        $hostname.localdomain        $hostname" > /etc/hosts
 	if [[ $typeinterface == wifi ]] ; then 
 		wifi-menu
 	else 
@@ -216,7 +216,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		done
 	fi
 	}
-	cmdchroot --chroot
+	arch-chroot /mnt cmdchroot 
 	exit
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
 	read ans
