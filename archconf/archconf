@@ -98,13 +98,16 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	clear
 	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub
+	clear
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
+	clear
 	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
 	passwd 
+	clear
 	if [ -d /sys/efi/efivars ]; then
 		chattr -i /boot/grub/i386-pc/core.img
 		grub-install --target=i386-pc --recheck --debug --force /dev/sda
@@ -124,6 +127,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo KEYMAP=it >> /etc/vconsole.conf
 	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 	echo "127.0.1.1        $hostname.localdomain        $hostname" >> /etc/hosts
+	clear
 	if [[ $typeinterface == wifi ]] ; then 
 		wifi-menu
 	else 
@@ -131,6 +135,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	clear
 	pacman -Sy xorg-server xorg-xinit
+	clear
 	echo che driver video hai? INTEL, AMD O NVIDIA?
 	ctrl=0
 	while [ $ctrl == 0 ] 
@@ -160,10 +165,12 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			ctrl=1 
 		fi
 	done
+	clear
 	echo inserisci il nome utente 
 	read name
 	useradd -m $name -s /bin/$shell
 	passwd $name
+	clear
 	echo che editor cli preferisci?
 	ctrl=0
 	while [ $ctrl == 0 ]
@@ -176,6 +183,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo inserisci un editor valido
 		fi
 	done
+	clear
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
 	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell user
@@ -273,6 +281,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo inserisci un numero da 1 a 6 ;;
 		esac
 	done
+	clear
 	pacman -Scc --noconfirm >&/dev/null
 	echo vuoi installare altre cose?
 	read ans
@@ -289,7 +298,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		done
-	fi' > /mnt/next.sh
+	fi
+	clear' > /mnt/next.sh
 	arch-chroot /mnt chmod +rx /next.sh
 	arch-chroot /mnt sh /next.sh
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
