@@ -58,7 +58,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			mkfs.vfat -F32 $boot 
 		       	mount $boot /mnt/boot
 		else
-			mount /dev$boot /mnt/boot
+			mount /dev/$boot /mnt/boot
 		fi
 	fi
 	echo hai creato una partizione swap?
