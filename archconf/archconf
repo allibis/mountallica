@@ -114,12 +114,12 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo come vuoi chiamare il sistema?
 	read hostname
 	echo $hostname > /etc/hostname
-	echo it_IT.UTF-8 UTF-8 > /etc/locale.gen
+	echo it_IT.UTF-8 UTF-8 >> /etc/locale.gen
 	locale-gen
-	echo LANG=it_IT.UTF-8 > /etc/locale.conf
-	echo KEYMAP=it > /etc/vconsole.conf
+	echo LANG=it_IT.UTF-8 >> /etc/locale.conf
+	echo KEYMAP=it >> /etc/vconsole.conf
 	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
-	echo "127.0.1.1        $hostname.localdomain        $hostname" > /etc/hosts
+	echo "127.0.1.1        $hostname.localdomain        $hostname" >> /etc/hosts
 	if [[ $typeinterface == wifi ]] ; then 
 		wifi-menu
 	else 
@@ -219,7 +219,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		done
-	fi' >> /mnt/next.sh
+	fi' > /mnt/next.sh
 	arch-chroot /mnt chmod +rx /next.sh
 	arch-chroot /mnt sh /next.sh
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
