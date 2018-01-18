@@ -198,32 +198,39 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	10=lxqt
 	11=sugar
 	"
-	read de
-	case $de in 
-	1)
-	    	pacman -S xfce4 ;;
-	2)
-	    	pacman -S gnome ;;
-	3)
-	    	pacman -S plasma ;;
-	4)
-	    	pacman -S mate ;;
-	5)
-	   	pacman -S deepin ;;
-	6)
-	    	pacman -S budgie-desktop ;;
-	7)
-	    	pacman -S enlightenment ;;
-	8)
-		pacman -S cinnamon ;;
-	9)
-		pacman -S lxde lxde-gtk3 ;;
-	10)
-    		pacman -S lxqt ;;
-	11)
-    		pacman -S sugar sugar-fructose ;
-	esac
+	ctrl=0
+	while [ $ctrl == 0 ]
+	do
+		read de
+		case $de in 
+		1)
+	    		pacman -S xfce4 && ctrl=1 ;;
+		2)
+	    		pacman -S gnome && ctrl=1 ;;
+		3)
+	    		pacman -S plasma && ctrl=1 ;;
+		4)
+	    		pacman -S mate && ctrl=1 ;;
+		5)
+	   		pacman -S deepin && ctrl=1 ;;
+		6)
+	    		pacman -S budgie-desktop && ctrl=1 ;;
+		7)
+	    		pacman -S enlightenment && ctrl=1 ;;
+		8)
+			pacman -S cinnamon && ctrl=1 ;;
+		9)
+			pacman -S lxde lxde-gtk3 && ctrl=1 ;;
+		10)
+    			pacman -S lxqt && ctrl=1 ;;
+		11)
+    			pacman -S sugar sugar-fructosev && ctrl=1 ;;
+		*)
+			echo inserisci un de nella lista
+		esac
+	done
 	pacman -Scc --noconfirm >&/dev/null
+	clear
 	echo "scegli un DM e scrivi il numero corrispondente
 	
 	1=lightdm
@@ -233,29 +240,39 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	5=slim
 	6=kdm
 	"
-	read dm
-	case $dm in
-	1)
-		pacman -S lightdm
-		systemctl enable lightdm ;;
-	2)
-		pacman -S sddm
-		systemctl enable sddm ;;
-	3)
-		pacman -S gdm			
-		systemctl enable gdm ;;
-	4)
-		pacman -S lxdm
-		systemctl enable lxdm ;;
-	5)
-		pacman -S slim
-		systemctl enable slim ;;
-	6)
-		aurdown kdm
-		systemctl enable kdm ;;
-	*)
-		echo inserisci un numero da 1 a 6 ;;
-	esac
+	ctrl=0
+	while [ $ctrl == 0 ] 
+	do
+		read dm
+		case $dm in
+		1)
+			pacman -S lightdm
+			systemctl enable lightdm 
+			ctrl=1 ;;
+		2)
+			pacman -S sddm
+			systemctl enable sddm 
+			ctrl=1 ;;
+		3)
+			pacman -S gdm			
+			systemctl enable gdm 
+			ctrl=1 ;;
+		4)
+			pacman -S lxdm
+			systemctl enable lxdm 
+			ctrl=1 ;;
+		5)
+			pacman -S slim
+			systemctl enable slim
+			ctrl=1 ;;
+		6)
+			aurdown kdm
+			systemctl enable kdm
+			ctrl=1 ;;
+		*)
+			echo inserisci un numero da 1 a 6 ;;
+		esac
+	done
 	pacman -Scc --noconfirm >&/dev/null
 	echo vuoi installare altre cose?
 	read ans
