@@ -148,7 +148,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ]
 	do
 		read shell
-		if ! pacman -S $shell >&/dev/null; then 
+		if ! pacman -S $shell; then 
 			echo inserisci una bash valida
 		else
 			ctrl=1 
@@ -163,7 +163,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ]
 	do 
 		read editor
-		if pacman -S $editor >&/dev/null ; then
+		if pacman -S $editor; then
 			echo export EDITOR=$editor > ~/.bashrc
 			ctrl=1
 		else
@@ -172,7 +172,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
-	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell`user
+	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell user
 	echo decommenta la riga "%wheel ALL=(ALL) NOPASSWD: ALL" per usare sudo senza password
 	${editor} /etc/sudoers
 	echo vuoi installare un DE?
