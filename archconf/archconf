@@ -97,7 +97,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh && cp aurdown.sh /mnt/bin/aurdown
-	cmdchroot () {
+	echo 
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
 	passwd 
@@ -218,10 +218,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			fi
 		done
-	fi
-	}
-	arch-chroot /mnt cmdchroot 
-	exit
+	fi >> /mnt/next.sh
+	arch-chroot /mnt chmod +rx /next.sh
+	arch-chroot /mnt sh /next.sh
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
