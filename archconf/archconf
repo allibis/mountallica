@@ -1,5 +1,6 @@
 #!/bin/bash
 
+loadkeys it
 echo CIAO,VUOI INSTALLARE ARCH?
 read ans
 
