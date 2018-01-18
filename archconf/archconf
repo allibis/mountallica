@@ -185,7 +185,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	read
 	${editor} /etc/sudoers
 	clear
-	echo 'inserisci il numero corrispondente al DE per installarlo
+	echo "inserisci il numero corrispondente al DE per installarlo
 	1=xfce
 	2=gnome
 	3=kde
@@ -197,7 +197,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	9=lxde
 	10=lxqt
 	11=sugar
-	'
+	"
 	read de
 	case $de in 
 	1)
