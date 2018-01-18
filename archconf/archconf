@@ -20,6 +20,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo vanno bene le partizioni?
 		read ans
 	done
+	clear
 	fdisk -l
 	echo
 	echo scegli la partizione di root
@@ -73,10 +74,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			swapon /dev/$swap
 		fi
 	fi
+	clear
 	echo vuoi modificare il mirrorlist di pacman?
 	read ans 
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
-	echo che connessione hai? wifi o ethernet?
+	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
 	read connection
 	if [[ $connection == wifi ]]; then 
 		wifi-menu
@@ -94,10 +96,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			fi
 		done
 	fi
+	clear
 	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
-	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh && cp aurdown.sh /mnt/bin/aurdown
+	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
@@ -111,6 +114,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		ctrl=1
 	fi
 	grub-mkconfig -o /boot/grub/grub.cfg
+	clear
 	echo come vuoi chiamare il sistema?
 	read hostname
 	echo $hostname > /etc/hostname
@@ -125,6 +129,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	else 
 		systemctl enable dhcpcd.service
 	fi
+	clear
 	pacman -Sy xorg-server xorg-xinit
 	echo che driver video hai? INTEL, AMD O NVIDIA?
 	ctrl=0
@@ -143,6 +148,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	pacman -Scc --noconfirm >&/dev/null
 	sudo pacman -S mesa
+	clear
 	echo che shell vuoi usare?
 	ctrl=0
 	while [ $ctrl == 0 ]
@@ -164,7 +170,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	do 
 		read editor
 		if pacman -S $editor; then
-			echo export EDITOR=$editor > ~/.bashrc
+			echo export EDITOR=$editor >> ~/.bashrc
 			ctrl=1
 		else
 			echo inserisci un editor valido
@@ -174,35 +180,82 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
 	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell user
 	echo decommenta la riga "%wheel ALL=(ALL) NOPASSWD: ALL" per usare sudo senza password
+	echo
+	echo premi invio per moodificare il file
+	read
 	${editor} /etc/sudoers
-	echo vuoi installare un DE?
-	read ans
-	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
-		echo quale?
-		ctrl=0
-		while [ $ctrl == 0 ]
-		do
-			read de
-			if ! pacman -S $de >&/dev/null; then
-				echo inserisci un DE valido
-			else
-				ctrl=1
-			fi
-		done
-	fi
+	clear
+	echo 'inserisci il numero corrispondente al DE per installarlo
+	1=xfce
+	2=gnome
+	3=kde
+	4=mate
+	5=deepin
+	6=budgie
+	7=enlightenment
+	8=cinnamon
+	9=lxde
+	10=lxqt
+	11=sugar
+	'
+	read de
+	case $de in 
+	1)
+	    	pacman -S xfce4 ;;
+	2)
+	    	pacman -S gnome ;;
+	3)
+	    	pacman -S plasma ;;
+	4)
+	    	pacman -S mate ;;
+	5)
+	   	pacman -S deepin ;;
+	6)
+	    	pacman -S budgie-desktop ;;
+	7)
+	    	pacman -S enlightenment ;;
+	8)
+		pacman -S cinnamon ;;
+	9)
+		pacman -S lxde lxde-gtk3 ;;
+	10)
+    		pacman -S lxqt ;;
+	11)
+    		pacman -S sugar sugar-fructose ;
+	esac
 	pacman -Scc --noconfirm >&/dev/null
-	echo che DM vuoi installare?
-	ctrl=0
-	while [ $ctrl == 0 ]
-	do
-		read dm
-		if ! pacman -S $dm; then
-			echo inserisci un DM valido
-		else
-			systemctl enable $dm
-			ctrl=1
-		fi
-	done
+	echo "scegli un DM e scrivi il numero corrispondente
+	
+	1=lightdm
+	2=sddm
+	3=gdm
+	4=lxdm
+	5=slim
+	6=kdm
+	"
+	read dm
+	case $dm in
+	1)
+		pacman -S lightdm
+		systemctl enable lightdm ;;
+	2)
+		pacman -S sddm
+		systemctl enable sddm ;;
+	3)
+		pacman -S gdm			
+		systemctl enable gdm ;;
+	4)
+		pacman -S lxdm
+		systemctl enable lxdm ;;
+	5)
+		pacman -S slim
+		systemctl enable slim ;;
+	6)
+		aurdown kdm
+		systemctl enable kdm ;;
+	*)
+		echo inserisci un numero da 1 a 6 ;;
+	esac
 	pacman -Scc --noconfirm >&/dev/null
 	echo vuoi installare altre cose?
 	read ans
