@@ -97,7 +97,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh && cp aurdown.sh /mnt/bin/aurdown
-	echo 
+	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
 	passwd 
@@ -113,10 +113,10 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo come vuoi chiamare il sistema?
 	read hostname
 	echo $hostname > /etc/hostname
-	echo 'it_IT.UTF-8 UTF-8' > /etc/locale.gen
+	echo it_IT.UTF-8 UTF-8 > /etc/locale.gen
 	locale-gen
 	echo LANG=it_IT.UTF-8 > /etc/locale.conf
-	echo 'KEYMAP=it' > /etc/vconsole.conf
+	echo KEYMAP=it > /etc/vconsole.conf
 	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 	echo "127.0.1.1        $hostname.localdomain        $hostname" > /etc/hosts
 	if [[ $typeinterface == wifi ]] ; then 
@@ -137,7 +137,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		elif [[ $driver == nvidia ]] || [[ $driver == NVIDIA ]] ; then 
 			pacman -S xf86-video-nouveau && ctrl=1
 		else 
-			echo 'inserisci un driver valido'
+			echo inserisci un driver valido
 		fi
 	done
 	pacman -Scc --noconfirm >&/dev/null
@@ -148,7 +148,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	do
 		read shell
 		if ! pacman -S $shell >&/dev/null; then 
-			echo 'inserisci una bash valida'
+			echo inserisci una bash valida
 		else
 			ctrl=1 
 		fi
@@ -166,17 +166,17 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo export EDITOR=$editor > ~/.bashrc
 			ctrl=1
 		else
-			echo 'inserisci un editor valido'
+			echo inserisci un editor valido
 		fi
 	done
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
-	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell\'user
+	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell`user
 	echo decommenta la riga "%wheel ALL=(ALL) NOPASSWD: ALL" per usare sudo senza password
 	${editor} /etc/sudoers
 	echo vuoi installare un DE?
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 		echo quale?
 		ctrl=0
 		while [ $ctrl == 0 ]
@@ -196,7 +196,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	do
 		read dm
 		if ! pacman -S $dm; then
-			echo 'inserisci un DM valido'
+			echo inserisci un DM valido
 		else
 			systemctl enable $dm
 			ctrl=1
@@ -205,7 +205,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	pacman -Scc --noconfirm >&/dev/null
 	echo vuoi installare altre cose?
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		ctrl=0
 		while [ $ctrl == 0 ]
 		do
@@ -214,11 +214,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			pacman -S $pkgs
 			echo finito?
 			read ans
-			if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
+			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 				ctrl=1
 			fi
 		done
-	fi >> /mnt/next.sh
+	fi' >> /mnt/next.sh
 	arch-chroot /mnt chmod +rx /next.sh
 	arch-chroot /mnt sh /next.sh
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
