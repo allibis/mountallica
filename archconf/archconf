@@ -158,12 +158,41 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
+		echo 'scegli una shell dalla lista
+		1=zsh
+		2=fish
+		3=dash
+		4=korn
+		*=tenere bash
+		'
 		read shell
-		if ! pacman -S $shell; then 
-			echo inserisci una bash valida
-		else
-			ctrl=1 
-		fi
+		case $shell in
+		1)
+			aurdown zsh
+			echo vuoi installare oh-my zsh?
+			read ans
+			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
+				aurdown oh-my-zsh-git
+			fi ;;
+		2)	
+			aurdown fish 
+			ctrl=1 ;;
+		3)
+			aurdown dash 
+			ctrl=1 ;;
+		4)
+			aurdown mksh 
+			ctrl=1 ;; 
+		*)
+			echo sei sicuro di tenere bash?
+			read ans
+			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]] ; then
+				ctrl=1
+			else
+				echo allora inserisci una shell
+			fi
+			;;
+		esac
 	done
 	clear
 	echo inserisci il nome utente 
@@ -186,10 +215,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, adesso bisogna modificare il file /etc/sudoers per utilizzare sudo
-	echo decommenta la riga "%wheel ALL=(ALL) ALL" per usare sudo con la password dell user
-	echo decommenta la riga "%wheel ALL=(ALL) NOPASSWD: ALL" per usare sudo senza password
+	echo decommenta la riga "ALL=(ALL) ALL" per usare sudo
 	echo
-	echo premi invio per moodificare il file
+	echo premi invio per modificare il file
 	read
 	${editor} /etc/sudoers
 	clear
@@ -278,19 +306,18 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	clear
 	pacman -Scc --noconfirm >&/dev/null
-	echo vuoi installare altre cose?
+	echo vuoi installare altro?
 	read ans
-	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 		ctrl=0
+		echo scrivi un pacchetto alla volta, quando hai finito inserisci "end"
 		while [ $ctrl == 0 ]
 		do
-			echo scrivi i pacchetti che vuoi installare
-			read pkgs
-			pacman -S $pkgs
-			echo finito?
-			read ans
-			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
+			read pkg
+			if [[ $pkg == end ]]; then
 				ctrl=1
+			else
+				aurdown $pkg
 			fi
 		done
 	fi
