@@ -179,7 +179,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 				aurdown oh-my-zsh-git
-			fi ;;
+			fi 
+			ctrl=1 ;;
 		2)	
 			aurdown fish 
 			ctrl=1 ;;
