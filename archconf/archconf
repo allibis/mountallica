@@ -246,7 +246,6 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	3=gdm
 	4=lxdm
 	5=slim
-	6=kdm
 	"
 	ctrl=0
 	while [ $ctrl == 0 ] 
@@ -272,10 +271,6 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		5)
 			pacman -S slim
 			systemctl enable slim
-			ctrl=1 ;;
-		6)
-			aurdown kdm
-			systemctl enable kdm
 			ctrl=1 ;;
 		*)
 			echo inserisci un numero da 1 a 6 ;;
