@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 loadkeys it
 echo CIAO,VUOI INSTALLARE ARCH?
 read ans
@@ -13,8 +13,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo scegli il device 
 		read dev
 		if ! sudo cfdisk $dev ; then
-			sudo cfdisk /dev/$dev
-		
+			sudo cfdisk /dev/$dev	
 		fi
 		sudo fdisk -l
 		echo vanno bene le partizioni?
@@ -22,11 +21,12 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	clear
 	fdisk -l
-	echo
 	echo scegli la partizione di root
 	read root
 	if ! mkfs.ext4 /dev/$root >&/dev/null; then mkfs.ext4 $root; fi
 	if ! mount /dev/$root /mnt >&/dev/null; then mount $root /mnt; fi
+	clear
+	fdisk -l
 	echo vuoi installare /home in una partizione separata?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
@@ -48,6 +48,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			if ! mount /dev/$home /mnt/home; then mount $home /mnt/home; fi
 		fi
 	fi
+	clear
+	fdisk -l
 	echo vuoi montare /boot in una partizione separata?
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
@@ -62,6 +64,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			mount /dev/$boot /mnt/boot
 		fi
 	fi
+	clear
+	fdisk -l
 	echo hai creato una partizione swap?
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then 
@@ -122,6 +126,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo come vuoi chiamare il sistema?
 	read hostname
 	echo $hostname > /etc/hostname
+	clear
 	echo it_IT.UTF-8 UTF-8 >> /etc/locale.gen
 	locale-gen
 	echo LANG=it_IT.UTF-8 >> /etc/locale.conf
@@ -132,7 +137,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	if [[ $typeinterface == wifi ]] ; then 
 		wifi-menu
 	else 
-		systemctl enable dhcpcd.service
+		systemctl enable dhcpcd.service >&/dev/null
 	fi
 	clear
 	pacman -Sy xorg-server xorg-xinit
@@ -159,13 +164,13 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
-		echo 'scegli una shell dalla lista
+		echo "scegli una shell dalla lista
 		1=zsh
 		2=fish
 		3=dash
 		4=korn
 		*=tenere bash
-		'
+		"
 		read shell
 		case $shell in
 		1)
@@ -269,7 +274,6 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	pacman -Scc --noconfirm >&/dev/null
 	clear
 	echo "scegli un DM e scrivi il numero corrispondente
-	
 	1=lightdm
 	2=sddm
 	3=gdm
