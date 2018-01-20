@@ -175,7 +175,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		case $shell in
 		1)
 			aurdown zsh
-			echo vuoi installare oh-my zsh?
+			echo vuoi installare oh my zsh?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 				aurdown oh-my-zsh-git
