@@ -287,25 +287,30 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		read dm
 		case $dm in
 		1)
-			pacman -S lightdm
-			systemctl enable lightdm 
-			ctrl=1 ;;
+			if pacman -S lightdm; then
+				systemctl enable lightdm 
+				ctrl=1 
+			fi ;;
 		2)
-			pacman -S sddm
-			systemctl enable sddm 
-			ctrl=1 ;;
+			if pacman -S sddm; then
+				systemctl enable sddm 
+				ctrl=1 
+			fi ;;
 		3)
-			pacman -S gdm			
-			systemctl enable gdm 
-			ctrl=1 ;;
+			if pacman -S gdm; then
+				systemctl enable gdm 
+				ctrl=1 
+			fi ;;
 		4)
-			pacman -S lxdm
-			systemctl enable lxdm 
-			ctrl=1 ;;
+			if pacman -S lxdm; then
+				systemctl enable lxdm 
+				ctrl=1 
+			fi ;;
 		5)
-			pacman -S slim
-			systemctl enable slim
-			ctrl=1 ;;
+			if pacman -S slim; then
+				systemctl enable slim
+				ctrl=1
+			fi ;;
 		*)
 			echo inserisci un numero da 1 a 6 ;;
 		esac
