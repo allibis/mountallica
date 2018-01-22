@@ -192,7 +192,12 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo vuoi installare oh my zsh?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
-				aurdown oh-my-zsh-git
+				wget https://aur.archlinux.org/cgit/aur.git/snapshot/oh-my-zsh-git.tar.gz
+				tar -xf oh-my-zsh-git.tar.gz
+				cd oh-my-zsh-git
+				makepkg -sic
+				cd ..
+				rm -rf oh-my-zsh-git
 			fi 
 			ctrl=1 ;;
 		2)	
@@ -218,7 +223,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	echo inserisci il nome utente 
 	read name
-	useradd -m $name -s /bin/$shell
+	useradd -m $name
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
@@ -272,7 +277,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo vuoi installare xfce4-goodies?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]] ; then
-				pacman -S
+				pacman -S xfce4-goodies
 			fi
 			ctrl=1 ;;
 		2)
@@ -385,6 +390,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				ctrl=1
 			else
 				aurdown $pkg
+				echo inserisci un altro pacchetto oppure inserisci end
 			fi
 		done
 	fi
