@@ -13,8 +13,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo scegli il device 
 		read dev
 		if ! sudo cfdisk $dev ; then
-			sudo cfdisk /dev/$dev	
+			sudo cfdisk /dev/$dev
 		fi
+		clear
 		sudo fdisk -l
 		echo vanno bene le partizioni?
 		read ans
@@ -27,6 +28,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	if ! mount /dev/$root /mnt >&/dev/null; then mount $root /mnt; fi
 	clear
 	fdisk -l
+	echo
+	echo
 	echo vuoi installare /home in una partizione separata?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
@@ -50,6 +53,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	clear
 	fdisk -l
+	echo
+	echo
 	echo vuoi montare /boot in una partizione separata?
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
@@ -66,6 +71,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	clear
 	fdisk -l
+	echo
+	echo
 	echo hai creato una partizione swap?
 	read ans
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then 
@@ -82,6 +89,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo vuoi modificare il mirrorlist di pacman?
 	read ans 
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
+	clear
 	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
 	read connection
 	if [[ $connection == wifi ]]; then 
@@ -174,7 +182,20 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	pacman -Scc --noconfirm >&/dev/null
 	clear
-	echo che shell vuoi usare?
+	echo inserisci il nome utente 
+	read name
+	useradd -m $name
+	ctrl=0
+	while [ $ctrl == 0 ]
+	do
+		if ! passwd $name; then 
+			echo "riprova"
+		else
+			ctrl=1
+		fi
+	done
+	clear
+		echo che shell vuoi usare?
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
@@ -221,18 +242,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		esac
 	done
 	clear
-	echo inserisci il nome utente 
-	read name
-	useradd -m $name
-	ctrl=0
-	while [ $ctrl == 0 ]
-	do
-		if ! passwd $name; then 
-			echo "riprova"
-		else
-			ctrl=1
-		fi
-	done
+	echo vuoi cambiare la shell all utente $name ?
+	read ans
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]] ; then
+		chsh -s /bin/$shell $name
+	fi
 	clear
 	echo che editor cli preferisci?
 	ctrl=0
