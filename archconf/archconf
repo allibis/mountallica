@@ -209,6 +209,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			ctrl=1
 		fi
 	done
+	echo "vuoi installare grub-customizer?"
+	read ans
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
+		aurdown grub-customizer
+	fi
 	clear
 		echo che shell vuoi usare?
 	ctrl=0
