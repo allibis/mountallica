@@ -178,15 +178,20 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ] 
 	do
 		read driver
-		if [[ $driver == amd ]] || [[ $driver == AMD ]] ; then 
+		case $driver in 
+		amd || AMD)
 			pacman -S  xf86-video-ati xf86-video-amdgpu lib32-mesa && ctrl=1
-		elif [[ $driver == intel ]] || [[ $driver  == INTEL ]] ; then 
+			;;
+		intel || INTEL)
 			pacman -S xf86-video-intel lib32-mesa && ctrl=1
-		elif [[ $driver == nvidia ]] || [[ $driver == NVIDIA ]] ; then 
+			;;
+		nvidia || NVIDIA) 
 			pacman -S xf86-video-nouveau && ctrl=1
-		elif [[ $driver == virtualbox ]]; then 
+			;;
+		virtualbox) 
 			pacman -S virtualbox-guest-utils && ctrl=1
-		else 
+			;;
+		*)
 			echo inserisci un driver valido
 		fi
 	done
