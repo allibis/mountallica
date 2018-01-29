@@ -193,7 +193,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			;;
 		*)
 			echo inserisci un driver valido
-		fi
+		esac
 	done
 	echo hai un touchpad?
 	read ans
