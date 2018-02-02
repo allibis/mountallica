@@ -1,0 +1,32 @@
+#!/bin/bash
+
+dialog --backtitle 'aurdown' --inputbox "inserisci il nome del pacchetto" 0 0 2>tmpfile
+pkg=$(cat tmpfile)
+if ! pacman -Si $pkg >&/dev/null; then
+        cd $HOME >&/dev/null
+        mkdir $pkg >&/dev/null
+        cd $HOME/$pkg >&/dev/null
+        if ! wget https://aur.archlinux.org/cgit/aur.git/snapshot/$pkg.tar.gz >&/dev/null; then
+                clear
+                dialog --backtitle 'aurdown' --title 'errore' --msgbox "$pkg non installato" 0 0
+        else    
+                clear
+                tar -xf $pkg.tar.gz >&/dev/null
+                cd $pkg >&/dev/null 
+                if ! makepkg -sic 2>&1 | dialog --backtitle 'aurdown' --progressbox 'installando ...' 50 100; then
+                        clear
+                        dialog --backtitle 'aurdown' --title 'errore' --msgbox "$pkg non installato" 0 0
+                
+                else
+                        clear
+                        dialog --backtitle 'aurdown'--msgbox "$pkg installato correttamente" 0 0
+                
+                fi
+        fi      
+        rm -rf $HOME/$pkg >&/dev/null
+else    
+        sudo pacman -S --noconfirm $pkg 2>&1 |  dialog --backtitle 'aurdown' --progressbox 'installando ...' 50 100
+        # sudo pacman -S --noconfirm $pkg >&/dev/null
+fi      
+clear
+exit
