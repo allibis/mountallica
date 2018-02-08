@@ -124,13 +124,14 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		done
 	fi
 	clear
-	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub
+	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget
 	clear
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	clear
 	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
 	arch-chroot /mnt chmod +rwx /bin/aurdown
+	echo "export boot=$boot" >> /mnt/next.sh
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
@@ -145,11 +146,12 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	clear
 	if [ -d /sys/efi/efivars ]; then
+		pacman -S efibootmgr
 		chattr -i /boot/grub/i386-pc/core.img
-		grub-install --target=i386-pc --recheck --debug --force /dev/sda
+		grub-install --target=i386-pc --recheck --debug --force /dev/$boot
 		chattr +i /boot/grub/i386-pc/core.img
 	else
-		grub-install --target=i386-pc --recheck --debug /dev/sda
+		grub-install --target=i386-pc --recheck --debug /dev/$boot
 		ctrl=1
 	fi
 	grub-mkconfig -o /boot/grub/grub.cfg
@@ -393,6 +395,11 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			fi ;;
 		2)
 			if pacman -S sddm; then
+				echo vuoi installare sddm-config-editor?
+				read ans
+				if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
+					aurdown sddm-config-editor-git
+				fi
 				systemctl enable sddm 
 				ctrl=1 
 			fi ;;
@@ -433,7 +440,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			fi
 		done
 	fi
-	clear' > /mnt/next.sh
+	clear' >> /mnt/next.sh
 	arch-chroot /mnt chmod +rx /next.sh
 	arch-chroot /mnt sh /next.sh
 	echo "Bene! L'installazione è finita. Vuoi spegnere il pc?"
