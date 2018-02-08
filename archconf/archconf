@@ -181,13 +181,13 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	do
 		read driver
 		case $driver in 
-		amd || AMD)
+		amd | AMD)
 			pacman -S  xf86-video-ati xf86-video-amdgpu lib32-mesa && ctrl=1
 			;;
-		intel || INTEL)
+		intel | INTEL)
 			pacman -S xf86-video-intel lib32-mesa && ctrl=1
 			;;
-		nvidia || NVIDIA) 
+		nvidia | NVIDIA) 
 			pacman -S xf86-video-nouveau && ctrl=1
 			;;
 		virtualbox) 
