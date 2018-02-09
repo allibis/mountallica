@@ -36,9 +36,18 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		read ans
 	done
 	clear
-	fdisk -l
-	echo scegli la partizione di root
-	read root
+	ctrl=1
+	while [ ctrl == 1 ]
+	do
+		fdisk -l
+		echo scegli la partizione di root
+		read root
+		echo sicuro?
+		read ans 
+		if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
+			ctrl=0
+		fi
+	done
 	if ! mkfs.ext4 /dev/$root >&/dev/null; then mkfs.ext4 $root; fi
 	if ! mount /dev/$root /mnt >&/dev/null; then mount $root /mnt; fi
 	clear
