@@ -110,8 +110,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		fi
 	fi
 	clear
-	echo vuoi modificare il mirrorlist di pacman?
-	read ans 
+	pacman -S reflector >&/dev/null
+	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
+	reflector > /etc/pacman.d/mirrorlist
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
 	clear
 	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
