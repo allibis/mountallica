@@ -207,6 +207,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo inserisci un driver valido
 		esac
 	done
+	pacman -S mesa >&/dev/null
 	echo hai un touchpad?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
