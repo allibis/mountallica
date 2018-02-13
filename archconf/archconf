@@ -157,9 +157,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	if [ -d /sys/efi/efivars ]; then
 		pacman -S efibootmgr
-		chattr -i /boot/grub/i386-pc/core.img
-		grub-install --target=i386-pc --recheck --debug --force /dev/$boot
-		chattr +i /boot/grub/i386-pc/core.img
+		grub-install --target=x86_64-efi --recheck --debug --force /dev/$boot
 	else
 		grub-install --target=i386-pc --recheck --debug /dev/$boot
 		ctrl=1
@@ -172,8 +170,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	echo it_IT.UTF-8 UTF-8 >> /etc/locale.gen
 	locale-gen
-	echo LANG=it_IT.UTF-8 >> /etc/locale.conf
-	echo KEYMAP=it >> /etc/vconsole.conf
+	echo LANG=it_IT.UTF-8 > /etc/locale.conf
+	echo KEYMAP=it > /etc/vconsole.conf
 	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 	echo "127.0.1.1        $hostname.localdomain        $hostname" >> /etc/hosts
 	clear
@@ -192,10 +190,10 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		read driver
 		case $driver in 
 		amd | AMD)
-			pacman -S  xf86-video-ati xf86-video-amdgpu lib32-mesa && ctrl=1
+			pacman -S  xf86-video-ati xf86-video-amdgpu && ctrl=1
 			;;
 		intel | INTEL)
-			pacman -S xf86-video-intel lib32-mesa && ctrl=1
+			pacman -S xf86-video-intel && ctrl=1
 			;;
 		nvidia | NVIDIA) 
 			pacman -S xf86-video-nouveau && ctrl=1
@@ -251,12 +249,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo vuoi installare oh my zsh?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
-				wget https://aur.archlinux.org/cgit/aur.git/snapshot/oh-my-zsh-git.tar.gz
-				tar -xf oh-my-zsh-git.tar.gz
-				cd oh-my-zsh-git
-				makepkg -sic
-				cd ..
-				rm -rf oh-my-zsh-git
+				sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 			fi 
 			ctrl=1 ;;
 		2)	
