@@ -78,6 +78,6 @@ ${color black}TOTAL UPDATES:${execpi 3600 checkupdates | wc -l}
 
 IP:${addr wlp2s0}
 
-DOWNLOAD SPEED:${downspeedf wlp2s0}
+DOWNLOAD SPEED:${downspeedf wlp2s0}KB/s
 ${downspeedgraph wlp2s0} 
 ]]
