@@ -134,7 +134,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		done
 	fi
 	clear
-	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget
+	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget dhcp dhcpcd wireless_tools
 	clear
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
@@ -428,6 +428,53 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	clear
 	pacman -Scc --noconfirm >&/dev/null
+	systemctl enable dhcpcd
+	systemctl enable dhcpd4
+	systemctl enable dhcpd6
+	echo che network manager desideri?
+	ctrl=0 
+	while [ ctrl == 0 ]
+	do
+		echo "
+		1=NetworkManager
+		2=wicd
+		3=netctl
+		4=manuale
+		"
+		read net
+		case $net in 
+		1)
+			pacman -S networkmanager network-manager-applet
+			if [[ $de != 2 ]]; then 
+				pacman -S polkit-gnome gnome-keyring libgnome-keyring python2-xdg
+			fi
+			pacman -R netctl
+			systemctl enable NetworkManager
+			ctrl=1
+			;;
+		2)
+			if [[ $de != 2 ]]; then
+				pacman -S xfce4-notifyd
+			fi
+			pacman -S wicd wicd-gtk
+			pacman -R netctl
+			gpasswd -a $name users
+			systemctl enble wicd
+			ctrl=1
+			;;
+		3)
+			pacman -S netctl
+			ctrl=1
+			;;
+		4)
+			echo hai scelto il manager manuale
+			ctrl=1
+		*)
+			clear
+			echo inserisci un numero da 1 a 4
+		esac
+	done
+	clear
 	echo vuoi installare altro?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
