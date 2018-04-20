@@ -12,3 +12,6 @@
   
 ## conkyrc
   my own conky configuration
+
+## exclamation
+  my personal zsh-theme
