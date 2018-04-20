@@ -1,4 +1,4 @@
-# aurdown.sh
+# aurdown
 
 
 It's a simple script for **Arch Linux** that download, compile and install programs from the official repos or from **AUR** archives.
