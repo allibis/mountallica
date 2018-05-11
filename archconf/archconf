@@ -139,9 +139,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	clear
-	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
+	wget tiny.cc/aurdown >&/dev/null && cp aurdown /mnt/bin/aurdown >&/dev/null
 	arch-chroot /mnt chmod +rwx /bin/aurdown
-	echo "export boot=$boot" >> /mnt/next.sh
+	echo "export boot="$boot >> /mnt/next.sh
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
