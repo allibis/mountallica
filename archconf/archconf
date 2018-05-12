@@ -141,7 +141,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	wget tiny.cc/aurdown >&/dev/null && cp aurdown /mnt/bin/aurdown >&/dev/null
 	arch-chroot /mnt chmod +rwx /bin/aurdown
-	echo "export boot="$boot >> /mnt/next.sh
+	echo 'boot'="$boot >> /mnt/next.sh
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
@@ -155,14 +155,23 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		fi
 	done
 	clear
-	if [ -d /sys/efi/efivars ]; then
+	echo BIOS o EFI?
+	read bios
+	if [[ $bios == efi ]] || [[ $bios == EFI ]]; then
 		pacman -S efibootmgr
-		grub-install --target=x86_64-efi --recheck --debug --force /dev/$boot
+		# grub-install --target=x86_64-efi --efi-directory=$boot --bootloader-id=arch_grub --recheck --debug
 	else
 		grub-install --target=i386-pc --recheck --debug /dev/$boot
 		ctrl=1
 	fi
 	grub-mkconfig -o /boot/grub/grub.cfg
+	clear
+	echo "vuoi installare grub-customizer?"
+	read ans
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
+		aurdown grub-customizer
+	fi
+
 	clear
 	echo come vuoi chiamare il sistema?
 	read hostname
@@ -205,13 +214,22 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo inserisci un driver valido
 		esac
 	done
-	pacman -S mesa >&/dev/null
+	pacman -S mesa
 	echo hai un touchpad?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 		pacman -S xf86-input-synaptics
 	fi
 	pacman -Scc --noconfirm >&/dev/null
+	clear
+	while [ $ctrl == 0 ]
+	do
+		if ! passwd $name; then 
+			echo "riprova"
+		else
+			ctrl=1
+		fi
+	done
 	clear
 	echo inserisci il nome utente 
 	read name
@@ -225,11 +243,6 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			ctrl=1
 		fi
 	done
-	echo "vuoi installare grub-customizer?"
-	read ans
-	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
-		aurdown grub-customizer
-	fi
 	clear
 		echo che shell vuoi usare?
 	ctrl=0
