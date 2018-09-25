@@ -471,6 +471,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		4)
 			echo hai scelto il manager manuale
 			ctrl=1
+			;;
 		*)
 			clear
 			echo inserisci un numero da 1 a 4
