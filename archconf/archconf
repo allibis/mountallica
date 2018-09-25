@@ -37,7 +37,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	done
 	clear
 	ctrl=1
-	while [ ctrl == 1 ]
+	while [ $ctrl == 1 ]
 	do
 		fdisk -l
 		echo scegli la partizione di root
@@ -110,9 +110,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		fi
 	fi
 	clear
-	pacman -S reflector >&/dev/null
+	pacman -Syy --noconfirm reflector >&/dev/null
 	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
-	reflector > /etc/pacman.d/mirrorlist
+	reflector --verbose -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
 	clear
 	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
@@ -134,12 +134,15 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		done
 	fi
 	clear
-	pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget dhcp dhcpcd wireless_tools
+	if ! pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget dhcp dhcpcd wireless_tools; then
+		mv /etc/pacman.d/mirrorlist.old /etc/pacman.d/mirrorlist
+		pacstrap /mnt base base-devel net-tools netctl dialog iw wpa_supplicant grub wget dhcp dhcpcd wireless_tools
+	fi
 	clear
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	clear
-	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
+	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown >&/dev/null && cp aurdown /mnt/bin/aurdown >&/dev/null
 	arch-chroot /mnt chmod +rwx /bin/aurdown
 	echo "export boot=$boot" >> /mnt/next.sh
 	echo '
@@ -205,7 +208,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			echo inserisci un driver valido
 		esac
 	done
-	pacman -S mesa >&/dev/null
+	pacman -S mesa --noconfirm >&/dev/null
 	echo hai un touchpad?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
@@ -401,7 +404,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			if pacman -S sddm; then
 				echo vuoi installare sddm-config-editor?
 				read ans
-				if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
+				if [[ $ans == "y" ]] || [[ $ans == "yes" ]] || [[ $ans == "" ]]; then
 					aurdown sddm-config-editor-git
 				fi
 				systemctl enable sddm
