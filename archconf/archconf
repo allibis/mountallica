@@ -16,16 +16,16 @@
 
 clear
 loadkeys it
-echo CIAO,VUOI INSTALLARE ARCH?
+echo VUOI INSTALLARE ARCH?
 read ans
 
 if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo hai partizionato?
 	read ans
-	while [ $ans == n ] || [ $ans == no ] 
+	while [ $ans == n ] || [ $ans == no ]
        	do
-		sudo fdisk -l  
-		echo scegli il device 
+		sudo fdisk -l
+		echo scegli il device
 		read dev
 		if ! sudo cfdisk $dev ; then
 			sudo cfdisk /dev/$dev
@@ -43,7 +43,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo scegli la partizione di root
 		read root
 		echo sicuro?
-		read ans 
+		read ans
 		if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			ctrl=0
 		fi
@@ -57,7 +57,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo vuoi installare /home in una partizione separata?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
-		echo scegli partizione 
+		echo scegli partizione
 		read home
 		echo vuoi formattarla?
 		read ans
@@ -87,7 +87,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		echo scegli la partizione
 		read boot
 		if ! mkfs.vfat -F32 /dev/$boot >&/dev/null; then
-			mkfs.vfat -F32 $boot 
+			mkfs.vfat -F32 $boot
 		       	mount $boot /mnt/boot
 		else
 			mount /dev/$boot /mnt/boot
@@ -99,7 +99,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo
 	echo hai creato una partizione swap?
 	read ans
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then 
+	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 		echo scegli la partizione
 		read swap
 		if ! mkswap /dev/$swap; then
@@ -110,14 +110,14 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		fi
 	fi
 	clear
-	pacman -S --noconfirm reflector >&/dev/null
+	pacman -S reflector >&/dev/null
 	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
-	reflector -c it > /etc/pacman.d/mirrorlist
+	reflector > /etc/pacman.d/mirrorlist
 	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
 	clear
 	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
 	read connection
-	if [[ $connection == wifi ]]; then 
+	if [[ $connection == wifi ]]; then
 		wifi-menu
 		typeinterface=wifi
 	elif [[ $connection == ethernet ]]; then
@@ -139,39 +139,30 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	genfstab -U /mnt > /mnt/etc/fstab
 	sed s/none/swap/g /mnt/etc/fstab
 	clear
-	wget tiny.cc/aurdown >&/dev/null && cp aurdown /mnt/bin/aurdown >&/dev/null
+	wget https://raw.githubusercontent.com/allibis/mountallica/master/aurdown/aurdown.sh >&/dev/null && cp aurdown.sh /mnt/bin/aurdown >&/dev/null
 	arch-chroot /mnt chmod +rwx /bin/aurdown
-	echo 'boot'="$boot >> /mnt/next.sh
+	echo "export boot=$boot" >> /mnt/next.sh
 	echo '
 	pacman -Scc --noconfirm >&/dev/null
 	echo bene, inserisci una password per il root
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
-		if ! passwd; then 
+		if ! passwd; then
 			echo "riprova"
 		else
 			ctrl=1
 		fi
 	done
 	clear
-	echo BIOS o EFI?
-	read bios
-	if [[ $bios == efi ]] || [[ $bios == EFI ]]; then
+	if [ -d /sys/efi/efivars ]; then
 		pacman -S efibootmgr
-		# grub-install --target=x86_64-efi --efi-directory=$boot --bootloader-id=arch_grub --recheck --debug
+		grub-install --target=x86_64-efi --recheck --debug --force /dev/$boot
 	else
 		grub-install --target=i386-pc --recheck --debug /dev/$boot
 		ctrl=1
 	fi
 	grub-mkconfig -o /boot/grub/grub.cfg
-	clear
-	echo "vuoi installare grub-customizer?"
-	read ans
-	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
-		aurdown grub-customizer
-	fi
-
 	clear
 	echo come vuoi chiamare il sistema?
 	read hostname
@@ -184,9 +175,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
 	echo "127.0.1.1        $hostname.localdomain        $hostname" >> /etc/hosts
 	clear
-	if [[ $typeinterface == wifi ]] ; then 
+	if [[ $typeinterface == wifi ]] ; then
 		wifi-menu
-	else 
+	else
 		systemctl enable dhcpcd.service >&/dev/null
 	fi
 	clear
@@ -194,27 +185,27 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	echo che driver video hai? INTEL, AMD O NVIDIA o virtualbox?
 	ctrl=0
-	while [ $ctrl == 0 ] 
+	while [ $ctrl == 0 ]
 	do
 		read driver
-		case $driver in 
+		case $driver in
 		amd | AMD)
 			pacman -S  xf86-video-ati xf86-video-amdgpu && ctrl=1
 			;;
 		intel | INTEL)
 			pacman -S xf86-video-intel && ctrl=1
 			;;
-		nvidia | NVIDIA) 
+		nvidia | NVIDIA)
 			pacman -S xf86-video-nouveau && ctrl=1
 			;;
-		virtualbox) 
+		virtualbox)
 			pacman -S virtualbox-guest-utils && ctrl=1
 			;;
 		*)
 			echo inserisci un driver valido
 		esac
 	done
-	pacman -S mesa
+	pacman -S mesa >&/dev/null
 	echo hai un touchpad?
 	read ans
 	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
@@ -222,27 +213,23 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	fi
 	pacman -Scc --noconfirm >&/dev/null
 	clear
-	while [ $ctrl == 0 ]
-	do
-		if ! passwd $name; then 
-			echo "riprova"
-		else
-			ctrl=1
-		fi
-	done
-	clear
-	echo inserisci il nome utente 
+	echo inserisci il nome utente
 	read name
 	useradd -m $name
 	ctrl=0
 	while [ $ctrl == 0 ]
 	do
-		if ! passwd $name; then 
+		if ! passwd $name; then
 			echo "riprova"
 		else
 			ctrl=1
 		fi
 	done
+	echo "vuoi installare grub-customizer?"
+	read ans
+	if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
+		aurdown grub-customizer
+	fi
 	clear
 		echo che shell vuoi usare?
 	ctrl=0
@@ -263,17 +250,17 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
 				sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-			fi 
+			fi
 			ctrl=1 ;;
-		2)	
-			aurdown fish 
+		2)
+			aurdown fish
 			ctrl=1 ;;
 		3)
-			aurdown dash 
+			aurdown dash
 			ctrl=1 ;;
 		4)
-			aurdown mksh 
-			ctrl=1 ;; 
+			aurdown mksh
+			ctrl=1 ;;
 		*)
 			echo sei sicuro di tenere bash?
 			read ans
@@ -295,7 +282,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	echo che editor cli preferisci?
 	ctrl=0
 	while [ $ctrl == 0 ]
-	do 
+	do
 		read editor
 		if pacman -S $editor; then
 			echo export EDITOR=$editor >> ~/.bashrc
@@ -329,9 +316,9 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	while [ $ctrl == 0 ]
 	do
 		read de
-		case $de in 
+		case $de in
 		1)
-	    		pacman -S xfce4 
+	    		pacman -S xfce4
 			echo vuoi installare xfce4-goodies?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]] ; then
@@ -339,7 +326,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 			fi
 			ctrl=1 ;;
 		2)
-	    		pacman -S gnome 
+	    		pacman -S gnome
 			echo vuoi installare gnome-extra?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
@@ -357,7 +344,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		4)
 	    		pacman -S mate && ctrl=1 ;;
 		5)
-	   		pacman -S deepin 
+	   		pacman -S deepin
 			echo  vuoi installare deepin-extra?
 			read ans
 			if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == "" ]]; then
@@ -377,8 +364,8 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		8)
 			pacman -S cinnamon && ctrl=1 ;;
 		9)
-			pacman -S lxde lxde-gtk3 lxsession desktop-file-utils 
-			cp /etc/xdg/openbox/menu.xml /etc/xdg/openbox/rc.xml /etc/xdg/openbox/autostart ~/.config/openbox 
+			pacman -S lxde lxde-gtk3 lxsession desktop-file-utils
+			cp /etc/xdg/openbox/menu.xml /etc/xdg/openbox/rc.xml /etc/xdg/openbox/autostart ~/.config/openbox
 			ctrl=1 ;;
 		10)
     			pacman -S lxqt vuoi installare lxqt-connman-applet?
@@ -401,14 +388,14 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	5=slim
 	"
 	ctrl=0
-	while [ $ctrl == 0 ] 
+	while [ $ctrl == 0 ]
 	do
 		read dm
 		case $dm in
 		1)
 			if pacman -S lightdm; then
-				systemctl enable lightdm 
-				ctrl=1 
+				systemctl enable lightdm
+				ctrl=1
 			fi ;;
 		2)
 			if pacman -S sddm; then
@@ -417,18 +404,18 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 				if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then
 					aurdown sddm-config-editor-git
 				fi
-				systemctl enable sddm 
-				ctrl=1 
+				systemctl enable sddm
+				ctrl=1
 			fi ;;
 		3)
 			if pacman -S gdm; then
-				systemctl enable gdm 
-				ctrl=1 
+				systemctl enable gdm
+				ctrl=1
 			fi ;;
 		4)
 			if pacman -S lxdm; then
-				systemctl enable lxdm 
-				ctrl=1 
+				systemctl enable lxdm
+				ctrl=1
 			fi ;;
 		5)
 			if pacman -S slim; then
@@ -445,7 +432,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	systemctl enable dhcpd4
 	systemctl enable dhcpd6
 	echo che network manager desideri?
-	ctrl=0 
+	ctrl=0
 	while [ ctrl == 0 ]
 	do
 		echo "
@@ -455,10 +442,10 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 		4=manuale
 		"
 		read net
-		case $net in 
+		case $net in
 		1)
 			pacman -S networkmanager network-manager-applet
-			if [[ $de != 2 ]]; then 
+			if [[ $de != 2 ]]; then
 				pacman -S polkit-gnome gnome-keyring libgnome-keyring python2-xdg
 			fi
 			pacman -R netctl
