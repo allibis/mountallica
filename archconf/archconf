@@ -112,8 +112,7 @@ if [[ $ans == y ]] || [[ $ans == yes ]] || [[ $ans == '' ]]; then
 	clear
 	pacman -Syy --noconfirm reflector >&/dev/null
 	cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
-	reflector --verbose -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist
-	if [[ $ans == 'y' ]] || [[ $ans == 'yes' ]] || [[ $ans == '' ]]; then nano /etc/pacman.d/mirrorlist; fi
+	reflector -f -l --save /etc/pacman.d/mirrorlist
 	clear
 	echo che connessione hai? wifi o ethernet? se sei in una macchina virtuale premi solamente invio
 	read connection
